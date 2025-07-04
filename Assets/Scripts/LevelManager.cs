@@ -429,6 +429,8 @@ public class LevelManager : MonoBehaviour
 	{
 		if (!readyToLoad)
 		{
+			AdsManager.main.ShowFullscreenAd();
+			
 			readyToLoad = true;
 			GameManager.Instance.CameraManager.RenderCamera.FadeOut();
 			toLoadIndex = _levelIndex;

@@ -3,9 +3,30 @@ using GamePush;
 
 public class AdsManager : MonoBehaviour
 {
+    public static AdsManager main;
+
+    void Awake()
+    {
+        main = this;
+    }
+
     async void Start()
     {
         await GP_Init.Ready;
+
+        GP_Ads.OnFullscreenStart += () => Debug.Log("Реклама началась");
+        GP_Ads.OnFullscreenClose += (success) =>
+        {
+            if (success)
+            {
+                Debug.Log("Реклама завершена");
+            }
+            else
+            {
+                Debug.Log("Реклама пропущена");
+            }
+        };
+
         OnPluginReady();
     }
 
@@ -22,13 +43,39 @@ public class AdsManager : MonoBehaviour
         print("Plugin ready");
     }
 
-    void ShowRewarded(string idOrTag)
+    public void ShowRewarded(string placement = "default")
     {
-        GP_Ads.ShowRewarded(idOrTag);
+        print("ShowRewarded");
+        GP_Ads.ShowRewarded(placement);
+    }
+
+    public void ShowFullscreenAd()
+    {
+        print("ShowFullscreenAd");
+        GP_Ads.ShowFullscreen();
+    }
+
+    void OnRewarded(bool success)
+    {
+        if (success)
+        {
+            Debug.Log("Награда получена!");
+        }
+        else
+        {
+            Debug.Log("Пользователь пропустил рекламу");
+        }
     }
     
-    void OnRewarded()
+    void OnRewardedComplete(bool success)
     {
-        print("OnRewarded");
+        if (success)
+        {
+            Debug.Log("Награда получена!");
+        }
+        else
+        {
+            Debug.Log("Пользователь пропустил рекламу");
+        }
     }
 }
