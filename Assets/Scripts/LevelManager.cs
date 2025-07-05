@@ -235,6 +235,9 @@ public class LevelManager : MonoBehaviour
 		{
 			return;
 		}
+
+		AdsManager.main.ShowFullscreenAd();
+
 		pointer.gameObject.SetActive(value: false);
 		AudioManager.PlaySFX("Game_Fail");
 		if (readyToLoad || gameState != gameStates.playing)

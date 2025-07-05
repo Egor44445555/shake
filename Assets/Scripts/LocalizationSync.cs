@@ -101,7 +101,10 @@ public class LocalizationSync : MonoBehaviour
 		case SyncTypes.SetActive:
 			for (int i = 0; i < EnglishObjects.Count; i++)
 			{
-				EnglishObjects[i]?.SetActive(!flag);
+				if (EnglishObjects[i] != null)
+				{
+					EnglishObjects[i].SetActive(!flag);
+				}				
 			}
 			for (int j = 0; j < ChineseObjects.Count; j++)
 			{

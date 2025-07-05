@@ -14,16 +14,20 @@ public class AdsManager : MonoBehaviour
     {
         await GP_Init.Ready;
 
+        GP_Ads.OnRewardedStart += () => Debug.Log("Rewarded реклама началась");
         GP_Ads.OnFullscreenStart += () => Debug.Log("Реклама началась");
+
+        GP_Ads.OnRewardedClose += (success) => OnRewarded(success);
+
         GP_Ads.OnFullscreenClose += (success) =>
         {
             if (success)
             {
-                Debug.Log("Реклама завершена");
+                Debug.Log("Advertising completed");
             }
             else
             {
-                Debug.Log("Реклама пропущена");
+                Debug.Log("Advertising skipped");
             }
         };
 
@@ -40,34 +44,20 @@ public class AdsManager : MonoBehaviour
 
     void OnPluginReady()
     {
-        print("Plugin ready");
+        // print("Plugin ready");
     }
 
     public void ShowRewarded(string placement = "default")
     {
-        print("ShowRewarded");
         GP_Ads.ShowRewarded(placement);
     }
 
     public void ShowFullscreenAd()
     {
-        print("ShowFullscreenAd");
         GP_Ads.ShowFullscreen();
     }
 
     void OnRewarded(bool success)
-    {
-        if (success)
-        {
-            Debug.Log("Награда получена!");
-        }
-        else
-        {
-            Debug.Log("Пользователь пропустил рекламу");
-        }
-    }
-    
-    void OnRewardedComplete(bool success)
     {
         if (success)
         {

@@ -20,10 +20,13 @@ public class Pointer : MonoBehaviour
 
 	private void Update()
 	{
-		ray = virtualCamera.ScreenPointToRay(UnityEngine.Input.mousePosition);
-		if (Physics.RaycastNonAlloc(ray, hitInfo, 100f, groundLayer) > 0)
+		if (!float.IsInfinity(Input.mousePosition.x) && !float.IsInfinity(Input.mousePosition.y))
 		{
-			base.transform.position = hitInfo[0].point;
-		}
+			ray = virtualCamera.ScreenPointToRay(Input.mousePosition);
+			if (Physics.RaycastNonAlloc(ray, hitInfo, 100f, groundLayer) > 0)
+			{
+				base.transform.position = hitInfo[0].point;
+			}
+		}		
 	}
 }

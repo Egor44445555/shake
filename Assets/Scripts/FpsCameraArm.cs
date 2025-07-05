@@ -53,7 +53,11 @@ public class FpsCameraArm : MonoBehaviour
 
 	private void Awake()
 	{
-		VirtualCamera.enabled = false;
+		if (GameManager.Instance.LevelManager.levelInfo.testGame3CTypes.ToString() == "topDown")
+		{
+			VirtualCamera.enabled = false;
+		}
+
 		startFov = virtualCamera.fieldOfView;
 	}
 

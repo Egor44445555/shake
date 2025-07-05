@@ -2601,8 +2601,8 @@ GameObject:
   - component: {fileID: 1791768364438770249}
   - component: {fileID: 1791768364925309737}
   - component: {fileID: 1791768364757537533}
-  - component: {fileID: 1791768366284264382}
   - component: {fileID: 1791768365277631316}
+  - component: {fileID: 1791768366284264382}
   - component: {fileID: 1791768366284264379}
   - component: {fileID: 1791768366284264388}
   - component: {fileID: 1791768366284264395}
@@ -2611,7 +2611,7 @@ GameObject:
   - component: {fileID: 1791768366284264443}
   m_Layer: 8
   m_Name: LDPlayer
-  m_TagString: 
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2688,26 +2688,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1791768366284264382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1791768364388438413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c74ef365dc074fc018d68eca9a03c6b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  partPfb: {fileID: 1791768366284264404, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
-  count: 0
-  distance: 1.8
-  followTarget: 0
-  target: {fileID: 0}
-  rotateSpeed: 50
-  minDistance: 0.5
-  debug: 0
 --- !u!54 &1791768365277631316
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2735,6 +2715,26 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 3
+--- !u!114 &1791768366284264382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791768364388438413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74ef365dc074fc018d68eca9a03c6b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partPfb: {fileID: 1791768366284264404, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
+  count: 0
+  distance: 1.8
+  followTarget: 0
+  target: {fileID: 0}
+  rotateSpeed: 50
+  minDistance: 0.5
+  debug: 0
 --- !u!114 &1791768366284264379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6418,7 +6418,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1791768364388438518}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.1921569, g: 0.3019608, b: 0.4745098, a: 0}
