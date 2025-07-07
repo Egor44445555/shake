@@ -90,10 +90,8 @@ public class Combat : MonoBehaviour
 
 	[Header("Arena settings")]
 	[SerializeField] public List<GameObject> listItems = new List<GameObject>();
-	// [HideInInspector]
-	[SerializeField] public int currentLevel = 1;
-	// [HideInInspector]
-	[SerializeField] public int currentEXP = 0;
+	[HideInInspector] public int currentLevel = 1;
+	[HideInInspector] public int currentEXP = 0;
 	[SerializeField] public int maxEXP = 2;
 	bool isArena = false;
 
@@ -257,19 +255,49 @@ public class Combat : MonoBehaviour
 		return false;
 	}
 
+	GameObject GetWeightedRandomObject()
+    {     
+		int totalWeight = listItems.Count * (listItems.Count + 1) / 2;
+        int randomValue = UnityEngine.Random.Range(0, totalWeight + 1);
+        
+        // Find out what object has fallen out
+        int currentWeight = 0;
+		
+        for (int i = 0; i < listItems.Count; i++)
+		{
+			// First element has the maximum weight
+			currentWeight += (listItems.Count - i);
+
+			if (randomValue <= currentWeight)
+			{
+				return listItems[i];
+			}
+		}
+        
+        // Return the last element if nothing was found
+        return listItems[listItems.Count - 1];
+    }
+
 	private void Die(int _killerTeam)
 	{
 		if (dead)
 		{
 			return;
 		}
-		DeadCount();
 
 		if (isArena)
 		{
+			GameObject randomObject = GetWeightedRandomObject();
+
+			if (randomObject != null)
+			{
+				Instantiate(randomObject, transform.position, Quaternion.identity);
+			}
+
 			Spawner.main.OnEnemyDeath();
 		}
-		
+
+		DeadCount();
 		gun.Active = false;
 		gun.gameObject.SetActive(value: false);
 		dead = true;

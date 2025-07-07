@@ -470,11 +470,20 @@ MonoBehaviour:
   ring: {fileID: 1791768364388438432}
   footParticle: {fileID: 1791768367693550464}
   bloodParticle: {fileID: 0}
+  health: 0
   headPoint: {fileID: 1791768364438770329}
   headPointRadius: 0.53
   obsticleChecker: {fileID: 1791768366284264389}
   ignoreExplosion: 0
   headFly: {fileID: 1791768366284264444}
+  listItems:
+  - {fileID: 7063743252289416628, guid: 54c41e92ab26aea43a69bd8759e1c42e, type: 3}
+  - {fileID: 6965821067544458296, guid: 2bd83f44e3be7bb49bef388f5635856e, type: 3}
+  - {fileID: 1509059788969467100, guid: ff15bcb207408534d9ef445972c4adac, type: 3}
+  - {fileID: 9021979860543945138, guid: 9f87343f55d17fc4d97826962925c4ba, type: 3}
+  currentLevel: 0
+  currentEXP: 0
+  maxEXP: 0
 --- !u!114 &1791768366284264400
 MonoBehaviour:
   m_ObjectHideFlags: 0
