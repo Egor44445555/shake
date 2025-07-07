@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyMove : EnemyRobot
@@ -76,6 +77,9 @@ public class EnemyMove : EnemyRobot
 	[SerializeField]
 	private Animator animator;
 
+	bool isArena = false;
+	NavMeshAgent agent;
+
 	protected override void Start()
 	{
 		base.Start();
@@ -83,6 +87,12 @@ public class EnemyMove : EnemyRobot
 		centerPoint = base.transform.position;
 		combat = GetComponent<Combat>();
 		obsticleChecker = GetComponent<ObsticleChecker>();
+
+		if (GetComponent<NavMeshAgent>() != null)
+		{
+			isArena = true;
+			agent = GetComponent<NavMeshAgent>();
+		}
 	}
 
 	public override void Boot()
@@ -134,7 +144,15 @@ public class EnemyMove : EnemyRobot
 				rb.constraints = RigidbodyConstraints.FreezeRotation;
 				currentMoveVelocity = Vector3.zero;
 				currentMoveVelocity.y = rb.velocity.y;
-				rb.velocity = currentMoveVelocity;
+
+				if (!isArena)
+				{
+					rb.velocity = currentMoveVelocity;
+				}
+				else
+				{
+					agent.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+				}
 			}
 			if (animator != null)
 			{

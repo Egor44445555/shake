@@ -218,7 +218,20 @@ public class LevelManager : MonoBehaviour
 		readyToLoad = false;
 		InitCount();
 		gameState = gameStates.playing;
-		player = UnityEngine.Object.Instantiate(playerPfb);
+
+		Transform startPoint;
+
+		if (FindObjectOfType<LevelInfo>())
+		{
+			startPoint = FindObjectOfType<LevelInfo>().gameObject.transform;
+		}
+		else
+		{
+			GameObject defaultStartPoint = new GameObject("DefaultStartPoint");
+			startPoint = defaultStartPoint.transform;
+		}
+
+		player = UnityEngine.Object.Instantiate(playerPfb, startPoint.position, startPoint.rotation);
 		player.transform.position = _startPoint;
 		pointer = UnityEngine.Object.Instantiate(pointerPfb);
 		GameManager.Instance.CameraManager.Init(player, pointer.transform);

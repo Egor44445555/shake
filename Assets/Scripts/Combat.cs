@@ -1,13 +1,15 @@
 using Com.LuisPedroFonseca.ProCamera2D;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Combat : MonoBehaviour
 {
 	public delegate void KillAllDelegate();
 
 	[SerializeField]
-	private int maxHealth = 10;
+	public int maxHealth = 10;
 
 	[SerializeField]
 	private int team;
@@ -49,7 +51,7 @@ public class Combat : MonoBehaviour
 	[SerializeField]
 	private ParticleSystem bloodParticle;
 
-	private int health;
+	[SerializeField] public int health;
 
 	private ParticleSystem.EmissionModule partEmi;
 
@@ -85,10 +87,25 @@ public class Combat : MonoBehaviour
 
 	public float HealthPercent => Mathf.Clamp01((float)health / (float)maxHealth);
 
+
+	[Header("Arena settings")]
+	[SerializeField] public List<GameObject> listItems = new List<GameObject>();
+	// [HideInInspector]
+	[SerializeField] public int currentLevel = 1;
+	// [HideInInspector]
+	[SerializeField] public int currentEXP = 0;
+	[SerializeField] public int maxEXP = 2;
+	bool isArena = false;
+
 	private void Awake()
 	{
 		Init();
 		KillAllStaticEvent = (KillAllDelegate)Delegate.Combine(KillAllStaticEvent, new KillAllDelegate(KillIfNotHead));
+
+		if (GetComponent<NavMeshAgent>() != null)
+		{
+			isArena = true;
+		}
 	}
 
 	private void OnDestroy()
@@ -247,6 +264,12 @@ public class Combat : MonoBehaviour
 			return;
 		}
 		DeadCount();
+
+		if (isArena)
+		{
+			Spawner.main.OnEnemyDeath();
+		}
+		
 		gun.Active = false;
 		gun.gameObject.SetActive(value: false);
 		dead = true;
