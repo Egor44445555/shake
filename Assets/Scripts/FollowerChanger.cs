@@ -6,7 +6,7 @@ public class FollowerChanger : MonoBehaviour
 
 	private void Start()
 	{
-		if (GameManager.Instance != null && GameManager.Instance.LevelManager.gameMode == LevelManager.gameModes.single)
+		if (GameManager.Instance != null && GameManager.Instance.LevelManager.gameMode == LevelManager.gameModes.single && Spawner.main == null)
 		{
 			Object.Instantiate(enemyPfb, base.transform.position, Quaternion.Euler(Vector3.zero));
 			UnityEngine.Object.Destroy(base.gameObject);

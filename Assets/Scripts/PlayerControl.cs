@@ -58,13 +58,21 @@ public class PlayerControl : MonoBehaviour
 	public Transform firstPersonCameraTransform => fpsCameraArm.transform;
 
 	public float MaxSpeed => maxSpeed;
-
 	public Combat Combat => combat;
+	
+	VariableJoystick joystick;
+	Vector2 lastJoystickDirection;
+	Vector2 lastNonZeroDirection = Vector2.right;
 
 	private void Awake()
 	{
 		rb = GetComponent<Rigidbody>();
 		combat = GetComponent<Combat>();
+
+		if (GameObject.FindGameObjectWithTag("MoveJoystick"))
+		{
+			joystick = GameObject.FindGameObjectWithTag("MoveJoystick").GetComponent<VariableJoystick>();
+		}
 	}
 
 	private void Start()
@@ -139,32 +147,64 @@ public class PlayerControl : MonoBehaviour
 
 	private void UpdateTopDownMovement()
 	{
-		Vector3 a = Vector3.zero;
-		if (UnityEngine.Input.GetKey(KeyCode.A))
+		if (!FindObjectOfType<GameManager>().isMobile)
 		{
-			a += Vector3.left;
+			Vector3 a = Vector3.zero;
+			if (UnityEngine.Input.GetKey(KeyCode.A))
+			{
+				a += Vector3.left;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.D))
+			{
+				a += Vector3.right;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.W))
+			{
+				a += Vector3.forward;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.S))
+			{
+				a += Vector3.back;
+			}
+			a = a.normalized;
+			float d = speed;
+			if (dashMode)
+			{
+				d = fastSpeed;
+			}
+			velocityTemp = (Quaternion.Euler(0f, GameManager.Instance.CameraManager.TopDownCameraArm.transform.rotation.eulerAngles.y, 0f) * a).normalized * d;
+			velocityTemp.y = rb.velocity.y;
+			rb.velocity = velocityTemp;
 		}
-		if (UnityEngine.Input.GetKey(KeyCode.D))
+		else
 		{
-			a += Vector3.right;
+			Vector2 direction = new Vector2(joystick.Horizontal, joystick.Vertical);
+			lastJoystickDirection = direction;
+
+			if (direction.magnitude > 0.001f)
+			{
+				lastNonZeroDirection = direction.normalized;
+
+				Vector3 a = new Vector3(lastNonZeroDirection.x, 0f, lastNonZeroDirection.y);
+				a = a.normalized;
+
+				float d = speed;
+
+				if (dashMode)
+				{
+					d = fastSpeed;
+				}
+
+				velocityTemp = (Quaternion.Euler(0f, GameManager.Instance.CameraManager.TopDownCameraArm.transform.rotation.eulerAngles.y, 0f) * a).normalized * d;
+				velocityTemp.y = rb.velocity.y;
+				rb.velocity = velocityTemp;
+			}
+			else
+			{
+				rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+			}
 		}
-		if (UnityEngine.Input.GetKey(KeyCode.W))
-		{
-			a += Vector3.forward;
-		}
-		if (UnityEngine.Input.GetKey(KeyCode.S))
-		{
-			a += Vector3.back;
-		}
-		a = a.normalized;
-		float d = speed;
-		if (dashMode)
-		{
-			d = fastSpeed;
-		}
-		velocityTemp = (Quaternion.Euler(0f, GameManager.Instance.CameraManager.TopDownCameraArm.transform.rotation.eulerAngles.y, 0f) * a).normalized * d;
-		velocityTemp.y = rb.velocity.y;
-		rb.velocity = velocityTemp;
+		
 		UnityEngine.Debug.DrawLine(base.transform.position, base.transform.position + rb.velocity);
 		Vector3 normalized = FCTool.Vector3YToZero(pointer.transform.position - base.transform.position).normalized;
 		UpdateDash(normalized);

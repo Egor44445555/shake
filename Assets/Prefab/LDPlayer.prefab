@@ -2728,6 +2728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partPfb: {fileID: 1791768366284264404, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
+  partPrefab: {fileID: 1791768364388438451, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
   count: 0
   distance: 1.8
   followTarget: 0
@@ -2806,10 +2807,9 @@ MonoBehaviour:
   obsticleChecker: {fileID: 0}
   ignoreExplosion: 0
   headFly: {fileID: 0}
-  listItems: []
+  maxEXP: 2
   currentLevel: 1
   currentEXP: 0
-  maxEXP: 5
 --- !u!136 &1791768366653363053
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2846,7 +2846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combat: {fileID: 1791768366284264395}
-  aimWay: 1
+  aimWay: 0
   rigidbody: {fileID: 1791768365277631316}
   needAim: {fileID: 0}
   clone: {fileID: 0}

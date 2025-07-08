@@ -8,9 +8,14 @@ public class Spawner : MonoBehaviour
     public static Spawner main;
     [SerializeField] List<GameObject> enemyPrefabs; // Enemy Prefabs
     [SerializeField] float spawnRadius = 20f; // Spawn radius around player
-    [SerializeField] float initialSpawnDelay = 2f; // Delay before first spawn
+    [SerializeField] float initialSpawnDelay = 10f; // Delay before first spawn
     [SerializeField] float spawnInterval = 5f; // Interval between waves
     [SerializeField] int maxEnemy = 45;
+    [SerializeField] public GameObject followerPrefab;
+    [SerializeField] public int maxEXP = 2;
+    
+	[HideInInspector] public int currentLevel = 1;
+	[HideInInspector] public int currentEXP = 0;
 
     Transform player;
     int currentWave = 0;
@@ -29,7 +34,7 @@ public class Spawner : MonoBehaviour
     void SpawnEnemyWave()
     {
         // Increase the number of enemies with each wave
-        int enemiesToSpawn = Mathf.Min(3 + currentWave / 2, 10);
+        int enemiesToSpawn = Mathf.Min(5 + currentWave / 2, 10);
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             SpawnRandomEnemy();

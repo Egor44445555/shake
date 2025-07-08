@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
@@ -27,17 +28,17 @@ public class Item : MonoBehaviour
     public bool useEasingForFloating = false; // Separate toggle for floating ease
     public float floatHeight = 1f; // Max height displacement
     public float floatSpeed = 1f;
-    private Vector3 initialPosition;
-    private float floatTimer;
+    Vector3 initialPosition;
+    float floatTimer;
 
-    private Vector3 initialScale;
+    Vector3 initialScale;
     public Vector3 startScale;
     public Vector3 endScale;
 
     public bool isScaling = false;
     public bool useEasingForScaling = false; // Separate toggle for scaling ease
     public float scaleLerpSpeed = 1f; // Speed of scaling transition
-    private float scaleTimer;
+    float scaleTimer;
 
     void Start()
     {
@@ -47,6 +48,11 @@ public class Item : MonoBehaviour
         // Adjust start and end scale based on initial scale
         startScale = initialScale;
         endScale = initialScale * (endScale.magnitude / startScale.magnitude);
+
+        if (UIManager.main)
+        {
+            UIManager.main.XPCount.text = Spawner.main.currentEXP.ToString() + " / " + Spawner.main.maxEXP.ToString();
+        }
     }
 
     void Update()
@@ -95,7 +101,7 @@ public class Item : MonoBehaviour
     {
         return t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
     }
-
+    
     void OnTriggerEnter(Collider other)
     {
         Combat combat = other.GetComponent<Combat>();
@@ -105,14 +111,18 @@ public class Item : MonoBehaviour
             switch (types)
             {
                 case Types.Experience:
-                    combat.currentEXP += amount;
+                    Spawner.main.currentEXP += amount;
 
-                    if (combat.currentEXP >= combat.maxEXP)
+                    if (Spawner.main.currentEXP >= Spawner.main.maxEXP)
                     {
-                        combat.currentLevel += 1;
-                        combat.currentEXP = 0;
+                        Spawner.main.currentLevel += 1;
+                        Spawner.main.currentEXP = 0;
+                        Spawner.main.maxEXP += 5;
+                        Instantiate(Spawner.main.followerPrefab, transform.position, Quaternion.identity);
+                        GameManager.Instance.LevelManager.CountABro();
                     }
 
+                    UIManager.main.XPCount.text = Spawner.main.currentEXP.ToString() + "/" + Spawner.main.maxEXP.ToString();
                     Destroy(gameObject);
                     break;
                 case Types.Health:

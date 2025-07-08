@@ -75,8 +75,15 @@ public class Gun : MonoBehaviour
 
 	public bool IsMeleeWeapon => isMeleeWeapon;
 
+	VariableJoystick joystick;
+
 	private void Awake()
 	{
+		if (GameObject.FindGameObjectWithTag("AimJoystick"))
+		{
+			joystick = GameObject.FindGameObjectWithTag("AimJoystick").GetComponent<VariableJoystick>();
+		}		
+
 		if ((bool)muzzleLight)
 		{
 			lightIntensity = muzzleLight.intensity;
@@ -134,9 +141,23 @@ public class Gun : MonoBehaviour
 				shootTimer += Time.deltaTime;
 			}
 			bool flag = (autoTrigger && Input.GetMouseButton(0)) || (!autoTrigger && Input.GetMouseButtonDown(0));
+
 			if ((canShoot || (flag && !player.Combat.IsDead && team != 1)) && Active && shootTimer >= realShootTime)
 			{
-				ShootOneBullet();
+				if (!FindObjectOfType<GameManager>().isMobile)
+				{
+					ShootOneBullet();
+				}
+				else
+				{
+					Vector2 joystickInput = new Vector2(joystick.Horizontal, joystick.Vertical);
+					
+					if (FindObjectOfType<GameManager>().isMobile && joystickInput.magnitude > 0.15f)
+					{
+						ShootOneBullet();
+					}					
+				}
+				
 				shootTimer -= realShootTime;
 				realShootTime = shootTime;
 				if (team == 1)

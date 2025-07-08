@@ -8,7 +8,8 @@ public class Aimer : MonoBehaviour
 	{
 		aimPointer,
 		aimMoveDirection,
-		aimPlayer
+		aimPlayer,
+		aimJoystick
 	}
 
 	public Combat combat;
@@ -42,6 +43,16 @@ public class Aimer : MonoBehaviour
 	[SerializeField]
 	private bool aimZonFpsMode;
 
+	VariableJoystick joystick;
+
+	void Awake()
+	{
+		if (GameObject.FindGameObjectWithTag("AimJoystick"))
+		{
+			joystick = GameObject.FindGameObjectWithTag("AimJoystick").GetComponent<VariableJoystick>();
+		}
+	}
+
 	public void SetAsSubAimer()
 	{
 		isSubAimer = true;
@@ -56,6 +67,11 @@ public class Aimer : MonoBehaviour
 				subAimers[i].SetAsSubAimer();
 			}
 		}
+
+		if (FindObjectOfType<GameManager>().isMobile)
+		{
+			aimWay = aimWays.aimJoystick;
+		}		
 	}
 
 	private void Update()
@@ -90,6 +106,7 @@ public class Aimer : MonoBehaviour
 			{
 				return;
 			}
+
 			if (aimWay == aimWays.aimPlayer)
 			{
 				base.transform.rotation = Quaternion.LookRotation(FCTool.Vector3YToZero(GameManager.Instance.LevelManager.Player.transform.position - base.transform.position), Vector3.up);
@@ -104,6 +121,7 @@ public class Aimer : MonoBehaviour
 				{
 					return;
 				}
+
 				if (aimWay == aimWays.aimPointer)
 				{
 					if (!player.Combat.IsDead)
@@ -117,6 +135,24 @@ public class Aimer : MonoBehaviour
 					if (lookVector.magnitude > 0.15f)
 					{
 						base.transform.rotation = Quaternion.LookRotation(lookVector, Vector3.up);
+					}
+				}
+
+				if (aimWay == aimWays.aimJoystick)
+				{
+					Vector2 joystickInput = new Vector2(joystick.Horizontal, joystick.Vertical);
+    
+					if (joystickInput.magnitude > 0.15f)
+					{
+						Vector3 direction = new Vector3(joystickInput.x, 0f, joystickInput.y).normalized;
+						
+						float cameraYRotation = GameManager.Instance.CameraManager.TopDownCameraArm.transform.rotation.eulerAngles.y;
+						direction = Quaternion.Euler(0f, cameraYRotation, 0f) * direction;
+						
+						if (direction != Vector3.zero)
+						{
+							transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+						}
 					}
 				}
 			}

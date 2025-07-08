@@ -84,7 +84,9 @@ public class Bullet : MonoBehaviour
 					num2 = i;
 				}
 			}
+
 			layerTemp = hit[num2].collider.gameObject.layer;
+			
 			if (((1 << layerTemp) & (int)hurtableLayer) != 0)
 			{
 				Combat component = hit[num2].collider.gameObject.GetComponent<Combat>();

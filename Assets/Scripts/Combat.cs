@@ -87,22 +87,20 @@ public class Combat : MonoBehaviour
 
 	public float HealthPercent => Mathf.Clamp01((float)health / (float)maxHealth);
 
-
-	[Header("Arena settings")]
-	[SerializeField] public List<GameObject> listItems = new List<GameObject>();
-	[HideInInspector] public int currentLevel = 1;
-	[HideInInspector] public int currentEXP = 0;
-	[SerializeField] public int maxEXP = 2;
 	bool isArena = false;
+	EnemyArena arenaEnemy;
+	private NavMeshAgent navMeshAgent;
 
 	private void Awake()
 	{
 		Init();
 		KillAllStaticEvent = (KillAllDelegate)Delegate.Combine(KillAllStaticEvent, new KillAllDelegate(KillIfNotHead));
 
-		if (GetComponent<NavMeshAgent>() != null)
+		if (FindObjectOfType<Spawner>() != null)
 		{
 			isArena = true;
+			arenaEnemy = GetComponent<EnemyArena>();
+			navMeshAgent = GetComponent<NavMeshAgent>();
 		}
 	}
 
@@ -221,15 +219,19 @@ public class Combat : MonoBehaviour
 			{
 				return;
 			}
+
 			health -= hurt;
+
 			if ((bool)headPoint && Vector3.Distance(_hurtPoint, headPoint.position) <= headPointRadius)
 			{
 				health -= hurt;
 			}
+
 			if (IsHead())
 			{
 				GameManager.Instance.PostManager.StartHurt();
 			}
+
 			if (health <= 0)
 			{
 				if (IsHead())
@@ -253,30 +255,7 @@ public class Combat : MonoBehaviour
 			return part.IsHead;
 		}
 		return false;
-	}
-
-	GameObject GetWeightedRandomObject()
-    {     
-		int totalWeight = listItems.Count * (listItems.Count + 1) / 2;
-        int randomValue = UnityEngine.Random.Range(0, totalWeight + 1);
-        
-        // Find out what object has fallen out
-        int currentWeight = 0;
-		
-        for (int i = 0; i < listItems.Count; i++)
-		{
-			// First element has the maximum weight
-			currentWeight += (listItems.Count - i);
-
-			if (randomValue <= currentWeight)
-			{
-				return listItems[i];
-			}
-		}
-        
-        // Return the last element if nothing was found
-        return listItems[listItems.Count - 1];
-    }
+	}	
 
 	private void Die(int _killerTeam)
 	{
@@ -287,13 +266,16 @@ public class Combat : MonoBehaviour
 
 		if (isArena)
 		{
-			GameObject randomObject = GetWeightedRandomObject();
-
-			if (randomObject != null)
+			if (navMeshAgent)
 			{
-				Instantiate(randomObject, transform.position, Quaternion.identity);
+				navMeshAgent.enabled = false;
 			}
 
+			if (arenaEnemy)
+			{
+				arenaEnemy.CreateRandomResource();
+			}
+					
 			Spawner.main.OnEnemyDeath();
 		}
 
@@ -303,6 +285,7 @@ public class Combat : MonoBehaviour
 		dead = true;
 		AudioManager.PlaySFXAtPosition("Death_Flesh", base.transform.position);
 		AudioManager.PlaySFXAtPosition("Scream", base.transform.position);
+
 		if (team != 1)
 		{
 			if (IsHead())
@@ -327,20 +310,25 @@ public class Combat : MonoBehaviour
 		{
 			DataManager.CountEnemyKilled();
 		}
+
 		if (ring != null)
 		{
 			ring.SetActive(value: false);
 		}
+
 		if (rope != null)
 		{
 			rope.SetActive(value: false);
 		}
+
 		base.gameObject.layer = LayerMask.NameToLayer("DeadBody");
 		ProCamera2DShake.Instance.Shake("KillShake");
+
 		if (part != null)
 		{
 			part.Remove();
 		}
+
 		rb.constraints = RigidbodyConstraints.None;
 		GetComponent<Collider>().material = GameManager.Instance.PhysicsManager.deadBodyMaterial;
 		rb.AddForce((UnityEngine.Random.insideUnitSphere + Vector3.up * 3f).normalized * 100f);
@@ -363,7 +351,7 @@ public class Combat : MonoBehaviour
 
 	private void DeadCount()
 	{
-		if (!IsHead() && team == 0)
+		if (!IsHead() && team == 0 && !isArena)
 		{
 			GameManager.Instance.LevelManager.KillABro(actived);
 		}

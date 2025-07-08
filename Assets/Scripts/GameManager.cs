@@ -1,4 +1,5 @@
 using UnityEngine;
+using GamePush;
 
 public class GameManager : MonoBehaviour
 {
@@ -46,8 +47,11 @@ public class GameManager : MonoBehaviour
 
 	public int currentLevel => levelManager.levelInfo.currentLevelIndex;
 
+	public bool isMobile = false;
+
 	public void Init()
 	{
+		isMobile = false;
 		Object.DontDestroyOnLoad(base.gameObject);
 		instance = this;
 		DataManager.SetSavesIndex(0);
@@ -62,7 +66,7 @@ public class GameManager : MonoBehaviour
 		uiManager = GetComponent<UIManager>();
 		cameraManager = GetComponent<CameraManager>();
 		inited = true;
-		Application.targetFrameRate = 144;
+		Application.targetFrameRate = 144;	
 	}
 
 	private void Awake()
@@ -73,8 +77,20 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private void Update()
+	private void Start()
 	{
+		if (GP_Device.IsMobile())
+		{
+			// isMobile = true;
+		}
+
+		if (!isMobile)
+		{
+			foreach (VariableJoystick joystick in FindObjectsOfType<VariableJoystick>())
+			{
+				joystick.gameObject.SetActive(false);
+			}
+		}
 	}
 
 	public void DeleteDatas()

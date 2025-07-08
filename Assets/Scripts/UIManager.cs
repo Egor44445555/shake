@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+	public static UIManager main;
+
 	[SerializeField]
 	private Canvas UiCanvas;
 
@@ -16,6 +18,15 @@ public class UIManager : MonoBehaviour
 
 	[SerializeField]
 	private Text targetCountText;
+
+	[SerializeField]
+	private GameObject targetCountBlock;
+
+	[SerializeField]
+	public Text XPCount;
+
+	[SerializeField]
+	private GameObject XPCountBlock;
 
 	public Color redColor;
 
@@ -49,11 +60,8 @@ public class UIManager : MonoBehaviour
 
 	private void Awake()
 	{
+		main = this;
 		healthBarMat = healthBarImage.material;
-	}
-
-	private void Start()
-	{
 	}
 
 	public void Init(Camera _camera)
@@ -73,6 +81,7 @@ public class UIManager : MonoBehaviour
 	{
 		remainCountText.text = _remainCount.ToString();
 		targetCountText.text = _teamCount.ToString() + "/" + _targetCount.ToString();
+
 		if (_teamCount >= _targetCount)
 		{
 			targetCountText.color = greenColor;
@@ -85,10 +94,14 @@ public class UIManager : MonoBehaviour
 
 	private void Update()
 	{
+		targetCountBlock.SetActive(FindObjectOfType<Spawner>() == null);
+		XPCountBlock.SetActive(FindObjectOfType<Spawner>() != null);
+
 		if (GameManager.Instance.LevelManager.Player != null)
 		{
-			healthBarMat.SetFloat("_CutValue", GameManager.Instance.LevelManager.Player.Combat.HealthPercent);
+			healthBarImage.fillAmount = GameManager.Instance.LevelManager.Player.Combat.HealthPercent;
 		}
+
 		if (over && overShowTimer < overShowTime)
 		{
 			overShowTimer += Time.unscaledDeltaTime;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class SnakeHead : MonoBehaviour
 {
 	[SerializeField]
-	private SnakePart partPfb;
+	public SnakePart partPfb;
 
 	[SerializeField]
 	private int count;
