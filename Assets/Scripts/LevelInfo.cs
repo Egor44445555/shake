@@ -20,6 +20,20 @@ public class LevelInfo : MonoBehaviour
 
 	public LevelManager.game3Ctypes testGame3CTypes;
 
+	void Awake()
+	{
+		PlayerSaveData loadedData = JsonSave.LoadData<PlayerSaveData>("playerData");
+
+		if (loadedData.game3Ctypes == "fps")
+		{
+			testGame3CTypes = LevelManager.game3Ctypes.fps;
+		}
+		else
+		{
+			testGame3CTypes = LevelManager.game3Ctypes.topDown;
+		}
+	}
+
 	private void Start()
 	{
 		if (GameManager.Instance == null)
@@ -34,6 +48,7 @@ public class LevelInfo : MonoBehaviour
 
 		GameManager.Instance.LevelManager.levelInfo = this;
 		GameManager.Instance.LevelManager.StartLevel(base.transform.position, targetCount);
+
 		for (int i = 0; i < countTexts.Count; i++)
 		{
 			countTexts[i].text = targetCount.ToString();

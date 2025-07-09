@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
 
 	[SerializeField]
 	private Text remainCountText;
+	[SerializeField] GameObject remainCountBlock;
 
 	[SerializeField]
 	private Text targetCountText;
@@ -22,11 +23,12 @@ public class UIManager : MonoBehaviour
 	[SerializeField]
 	private GameObject targetCountBlock;
 
-	[SerializeField]
-	public Text XPCount;
 
-	[SerializeField]
-	private GameObject XPCountBlock;
+	[SerializeField] public Text XPCount;
+	[SerializeField] GameObject XPCountBlock;
+	[SerializeField] public Text levelCount;
+	[SerializeField] GameObject levelCountBlock;
+
 
 	public Color redColor;
 
@@ -94,8 +96,10 @@ public class UIManager : MonoBehaviour
 
 	private void Update()
 	{
+		remainCountBlock.SetActive(FindObjectOfType<Spawner>() == null);
 		targetCountBlock.SetActive(FindObjectOfType<Spawner>() == null);
 		XPCountBlock.SetActive(FindObjectOfType<Spawner>() != null);
+		levelCountBlock.SetActive(FindObjectOfType<Spawner>() != null);
 
 		if (GameManager.Instance.LevelManager.Player != null)
 		{

@@ -152,7 +152,7 @@ public class Gun : MonoBehaviour
 				{
 					Vector2 joystickInput = new Vector2(joystick.Horizontal, joystick.Vertical);
 					
-					if (FindObjectOfType<GameManager>().isMobile && joystickInput.magnitude > 0.15f)
+					if (FindObjectOfType<GameManager>().isMobile && joystickInput.magnitude > 0.01f)
 					{
 						ShootOneBullet();
 					}					

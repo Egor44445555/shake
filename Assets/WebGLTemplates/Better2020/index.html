@@ -83,6 +83,7 @@
           progressBarFull.style.width = `${100 * progress}%`;
         }).then((unityInstance) => {
           loadingCover.style.display = "none";
+
           if (canFullscreen) {
             if (!hideFullScreenButton) {
               fullscreenButton.style.display = "";
@@ -96,6 +97,27 @@
         });
       };
       document.body.appendChild(script);
+
+      canvas.addEventListener("click", function() {
+          canvas.requestPointerLock = canvas.requestPointerLock || 
+                                  canvas.mozRequestPointerLock || 
+                                  canvas.webkitRequestPointerLock;
+          canvas.requestPointerLock();
+      });
+
+      document.addEventListener("pointerlockchange", lockChangeAlert, false);
+      document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
+      document.addEventListener("webkitpointerlockchange", lockChangeAlert, false);
+
+      function lockChangeAlert() {
+          if (document.pointerLockElement === canvas ||
+              document.mozPointerLockElement === canvas ||
+              document.webkitPointerLockElement === canvas) {
+              console.log("Cursor locked!");
+          } else {
+              console.log("Cursor unlocked!");
+          }
+      }
     </script>
   </body>
 </html>

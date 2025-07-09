@@ -202,9 +202,20 @@ public class LevelManager : MonoBehaviour
 		else if (!paused)
 		{
 			Cursor.visible = false;
-			if (game3CType == game3Ctypes.fps)
+
+			if (game3CType == game3Ctypes.fps && !FindObjectOfType<GameManager>().isMobile)
 			{
-				Cursor.lockState = CursorLockMode.Locked;
+				#if !UNITY_EDITOR && UNITY_WEBGL
+					Screen.fullScreen = true;
+					Cursor.lockState = CursorLockMode.None;
+				#else
+					Cursor.lockState = CursorLockMode.Locked;
+				#endif
+			}
+
+			if (game3CType != game3Ctypes.fps)
+			{
+				Cursor.lockState = CursorLockMode.Confined;
 			}
 		}
 	}

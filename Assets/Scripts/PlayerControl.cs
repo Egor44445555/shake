@@ -59,8 +59,12 @@ public class PlayerControl : MonoBehaviour
 
 	public float MaxSpeed => maxSpeed;
 	public Combat Combat => combat;
-	
-	VariableJoystick joystick;
+
+
+	// Joystick settings
+	[SerializeField] float joystickSensitivity = 3f;
+	VariableJoystick joystickMove;
+	VariableJoystick joystickAim;
 	Vector2 lastJoystickDirection;
 	Vector2 lastNonZeroDirection = Vector2.right;
 
@@ -71,7 +75,12 @@ public class PlayerControl : MonoBehaviour
 
 		if (GameObject.FindGameObjectWithTag("MoveJoystick"))
 		{
-			joystick = GameObject.FindGameObjectWithTag("MoveJoystick").GetComponent<VariableJoystick>();
+			joystickMove = GameObject.FindGameObjectWithTag("MoveJoystick").GetComponent<VariableJoystick>();
+		}
+
+		if (GameObject.FindGameObjectWithTag("AimJoystick"))
+		{
+			joystickAim = GameObject.FindGameObjectWithTag("AimJoystick").GetComponent<VariableJoystick>();
 		}
 	}
 
@@ -86,13 +95,13 @@ public class PlayerControl : MonoBehaviour
 		{
 			switch (GameManager.Instance.LevelManager.game3CType)
 			{
-			case LevelManager.game3Ctypes.topDown:
-				UpdateTopDownMovement();
-				break;
-			case LevelManager.game3Ctypes.fps:
-				UpdateFpsView();
-				UpdateFpsMovement();
-				break;
+				case LevelManager.game3Ctypes.topDown:
+					UpdateTopDownMovement();
+					break;
+				case LevelManager.game3Ctypes.fps:
+					UpdateFpsView();
+					UpdateFpsMovement();
+					break;
 			}
 		}
 	}
@@ -178,7 +187,7 @@ public class PlayerControl : MonoBehaviour
 		}
 		else
 		{
-			Vector2 direction = new Vector2(joystick.Horizontal, joystick.Vertical);
+			Vector2 direction = new Vector2(joystickMove.Horizontal, joystickMove.Vertical);
 			lastJoystickDirection = direction;
 
 			if (direction.magnitude > 0.001f)
@@ -212,56 +221,100 @@ public class PlayerControl : MonoBehaviour
 
 	private void UpdateFpsMovement()
 	{
-		Vector3 a = Vector3.zero;
-		if (UnityEngine.Input.GetKey(KeyCode.A))
+		if (!FindObjectOfType<GameManager>().isMobile)
 		{
-			a += Vector3.left;
-		}
-		if (UnityEngine.Input.GetKey(KeyCode.D))
-		{
-			a += Vector3.right;
-		}
-		if (UnityEngine.Input.GetKey(KeyCode.W))
-		{
-			a += Vector3.forward;
-		}
-		if (UnityEngine.Input.GetKey(KeyCode.S))
-		{
-			a += Vector3.back;
-		}
-		a = a.normalized;
-		float num = speed;
-		if (dashMode)
-		{
-			num = fastSpeed;
-		}
-		if ((bool)GameManager.Instance.CameraManager.FpsCameraArm)
-		{
-			if (GameManager.Instance.CameraManager.FpsCameraArm.Ads)
+			Vector3 a = Vector3.zero;
+			if (UnityEngine.Input.GetKey(KeyCode.A))
 			{
-				num *= 0.7f;
+				a += Vector3.left;
 			}
-			velocityTemp = (FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.forward).normalized * a.z + FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.right).normalized * a.x).normalized * num;
-			velocityTemp.y = rb.velocity.y;
+			if (UnityEngine.Input.GetKey(KeyCode.D))
+			{
+				a += Vector3.right;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.W))
+			{
+				a += Vector3.forward;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.S))
+			{
+				a += Vector3.back;
+			}
+			a = a.normalized;
+			float num = speed;
+			if (dashMode)
+			{
+				num = fastSpeed;
+			}
+			if ((bool)GameManager.Instance.CameraManager.FpsCameraArm)
+			{
+				if (GameManager.Instance.CameraManager.FpsCameraArm.Ads)
+				{
+					num *= 0.7f;
+				}
+				velocityTemp = (FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.forward).normalized * a.z + FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.right).normalized * a.x).normalized * num;
+				velocityTemp.y = rb.velocity.y;
+			}
+			if (UnityEngine.Input.GetKeyDown(KeyCode.Space) && checkGround)
+			{
+				velocityTemp.y = jumpSpeed;
+			}
+			if (UnityEngine.Input.GetKey(KeyCode.Space) && floatingMode && velocityTemp.y < 0f)
+			{
+				velocityTemp.y = 0f;
+			}
+			rb.velocity = velocityTemp;
+			UpdateDash((FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.forward).normalized * a.z + FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.right).normalized * a.x).normalized);
 		}
-		if (UnityEngine.Input.GetKeyDown(KeyCode.Space) && checkGround)
+		else
 		{
-			velocityTemp.y = jumpSpeed;
+			Vector2 inputDirection = new Vector2(joystickMove.Horizontal, joystickMove.Vertical);
+    
+			if (inputDirection.magnitude > 0.001f)
+			{
+				lastNonZeroDirection = inputDirection.normalized;
+			}
+
+			Vector3 moveDirection = new Vector3(inputDirection.x, 0f, inputDirection.y);
+			
+			if (moveDirection.magnitude > 0.001f)
+			{
+				moveDirection.Normalize();				
+				float cameraYRotation = GameManager.Instance.CameraManager.FpsCameraArm.transform.eulerAngles.y;				
+				moveDirection = Quaternion.Euler(0f, cameraYRotation, 0f) * moveDirection;				
+				float currentSpeed = dashMode ? fastSpeed : speed;				
+				Vector3 newVelocity = moveDirection * currentSpeed;
+				newVelocity.y = rb.velocity.y;				
+				rb.velocity = newVelocity;
+			}
+			else
+			{
+				rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+			}
 		}
-		if (UnityEngine.Input.GetKey(KeyCode.Space) && floatingMode && velocityTemp.y < 0f)
-		{
-			velocityTemp.y = 0f;
-		}
-		rb.velocity = velocityTemp;
-		UpdateDash((FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.forward).normalized * a.z + FCTool.Vector3YToZero(GameManager.Instance.CameraManager.FpsCameraArm.transform.right).normalized * a.x).normalized);
 	}
 
 	private void UpdateFpsView()
 	{
-		base.transform.rotation = Quaternion.Euler(0f, base.transform.rotation.eulerAngles.y + UnityEngine.Input.GetAxis("mouse x") * fpsCameraArm.Sensitivity, 0f);
-		fpsPitch += UnityEngine.Input.GetAxis("mouse y") * (0f - fpsCameraArm.Sensitivity);
-		fpsPitch = Mathf.Clamp(fpsPitch, -89.9f, 89.9f);
-		firstPersonCameraTransform.localRotation = Quaternion.Euler(fpsPitch, 0f, 0f);
+		if (!FindObjectOfType<GameManager>().isMobile)
+		{
+			base.transform.rotation = Quaternion.Euler(0f, base.transform.rotation.eulerAngles.y + UnityEngine.Input.GetAxis("mouse x") * fpsCameraArm.Sensitivity, 0f);
+			fpsPitch += UnityEngine.Input.GetAxis("mouse y") * (0f - fpsCameraArm.Sensitivity);
+			fpsPitch = Mathf.Clamp(fpsPitch, -89.9f, 89.9f);
+			firstPersonCameraTransform.localRotation = Quaternion.Euler(fpsPitch, 0f, 0f);
+		}
+		else
+		{
+			float rotationX, rotationY;
+			rotationX = joystickAim.Horizontal * joystickSensitivity;
+			rotationY = joystickAim.Vertical * joystickSensitivity;
+
+			transform.rotation *= Quaternion.Euler(0f, rotationX, 0f);
+			
+			fpsPitch += rotationY * -1f;
+			fpsPitch = Mathf.Clamp(fpsPitch, -89.9f, 89.9f);
+			firstPersonCameraTransform.localRotation = Quaternion.Euler(fpsPitch, 0f, 0f);
+		}
 	}
 
 	private Vector3 Vector3YToZero(Vector3 v3)

@@ -2728,7 +2728,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partPfb: {fileID: 1791768366284264404, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
-  partPrefab: {fileID: 1791768364388438451, guid: a57f7be21a15489daa2d523f389b092e, type: 3}
   count: 0
   distance: 1.8
   followTarget: 0
@@ -2778,6 +2777,7 @@ MonoBehaviour:
   dashTime: 0.15
   dashCoolTime: 0.5
   dashSpeed: 25
+  joystickSensitivity: 3
 --- !u!114 &1791768366284264395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2807,9 +2807,6 @@ MonoBehaviour:
   obsticleChecker: {fileID: 0}
   ignoreExplosion: 0
   headFly: {fileID: 0}
-  maxEXP: 2
-  currentLevel: 1
-  currentEXP: 0
 --- !u!136 &1791768366653363053
 CapsuleCollider:
   m_ObjectHideFlags: 0

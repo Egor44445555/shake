@@ -1,5 +1,5 @@
 using UnityEngine;
-using GamePush;
+// using GamePush;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 	public int currentLevel => levelManager.levelInfo.currentLevelIndex;
 
 	public bool isMobile = false;
+	public int maxLevel = 7;
 
 	public void Init()
 	{
@@ -79,10 +80,10 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		if (GP_Device.IsMobile())
-		{
-			// isMobile = true;
-		}
+		// if (GP_Device.IsMobile())
+		// {
+		// 	// isMobile = true;
+		// }
 
 		if (!isMobile)
 		{

@@ -52,6 +52,7 @@ public class Item : MonoBehaviour
         if (UIManager.main)
         {
             UIManager.main.XPCount.text = Spawner.main.currentEXP.ToString() + " / " + Spawner.main.maxEXP.ToString();
+            UIManager.main.levelCount.text = Spawner.main.currentLevel.ToString();
         }
     }
 
@@ -123,6 +124,7 @@ public class Item : MonoBehaviour
                     }
 
                     UIManager.main.XPCount.text = Spawner.main.currentEXP.ToString() + "/" + Spawner.main.maxEXP.ToString();
+                    UIManager.main.levelCount.text = Spawner.main.currentLevel.ToString();
                     Destroy(gameObject);
                     break;
                 case Types.Health:
