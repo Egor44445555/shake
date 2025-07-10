@@ -68,7 +68,7 @@ public class Aimer : MonoBehaviour
 			}
 		}
 
-		if (FindObjectOfType<GameManager>().isMobile)
+		if (FindObjectOfType<GameManager>() && FindObjectOfType<GameManager>().isMobile)
 		{
 			aimWay = aimWays.aimJoystick;
 		}		
