@@ -13,9 +13,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] int maxEnemy = 45;
     [SerializeField] public GameObject followerPrefab;
     [SerializeField] public int maxEXP = 2;
-    
-	[HideInInspector] public int currentLevel = 1;
-	[HideInInspector] public int currentEXP = 0;
+
+    [HideInInspector] public int currentLevel = 1;
+    [HideInInspector] public int currentEXP = 0;
+    [HideInInspector] public int accumulatedEXP = 0;
 
     Transform player;
     int currentWave = 0;
@@ -34,7 +35,8 @@ public class Spawner : MonoBehaviour
     void SpawnEnemyWave()
     {
         // Increase the number of enemies with each wave
-        int enemiesToSpawn = Mathf.Min(5 + currentWave / 2, 10);
+        int enemiesToSpawn = Mathf.Min(3 + currentWave / 2, 10);
+
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             SpawnRandomEnemy();
@@ -48,7 +50,7 @@ public class Spawner : MonoBehaviour
         if (enemyPrefabs.Count == 0) return;
 
         // Depending on the wave, the difficulty of enemies increases
-        int enemyIndex = Mathf.Min(currentWave / 5, enemyPrefabs.Count - 1);
+        int enemyIndex = Mathf.Min(currentWave / 3, enemyPrefabs.Count - 1);
         GameObject enemyPrefab = enemyPrefabs[enemyIndex];
 
         if (enemiesAlive < maxEnemy)
@@ -59,8 +61,8 @@ public class Spawner : MonoBehaviour
             {
                 Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
                 enemiesAlive++;
-            }            
-        }        
+            }
+        }
     }
 
     Vector3 GetRandomNavMeshPosition(float radius)
@@ -77,5 +79,27 @@ public class Spawner : MonoBehaviour
     public void OnEnemyDeath()
     {
         enemiesAlive--;
+    }
+
+    public void OnPlayerDeath()
+    {
+        Cursor.visible = true;
+        UIManager.main.totalCountBlock.SetActive(true);
+        UIManager.main.totalLevelCount.text = currentLevel.ToString();
+        UIManager.main.totalXPCount.text = accumulatedEXP.ToString();
+
+        PlayerSaveData loadedData = JsonSave.LoadData<PlayerSaveData>("playerData");
+
+        if (loadedData.maxArenaLevel < currentLevel)
+        {
+            loadedData.maxArenaLevel = currentLevel;
+        }
+
+        if (loadedData.maxArenaXP < accumulatedEXP)
+        {
+            loadedData.maxArenaXP = accumulatedEXP;
+        }
+
+        JsonSave.SaveData(loadedData, "playerData");
     }
 }

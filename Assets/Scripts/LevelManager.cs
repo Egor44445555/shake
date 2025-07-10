@@ -220,6 +220,23 @@ public class LevelManager : MonoBehaviour
 		}
 	}
 
+	public void TryLoadLevelButton()
+	{
+		TryLoadLevel(levelIndex);
+	}
+
+	public void TryLoadNextLevelButton()
+	{
+		if (levelInfo.hasNextLevel)
+		{
+			TryLoadLevel(levelIndex + 1);
+		}
+		else
+		{
+			TryLoadLevel(0);
+		}
+	}
+
 	public void StartLevel(Vector3 _startPoint, int _targetCount)
 	{
 		if (gameMode == gameModes.rescue)

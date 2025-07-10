@@ -260,11 +260,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72759d79acda09252c8f703e09e2bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 25
+  maxHealth: 30
   team: 1
   deadBodyStayTime: 1
   animator: {fileID: 0}
-  gunPfb: {fileID: 1791768366284264414, guid: 20124a09e46b445d903b741db81dbd14, type: 3}
+  gunPfb: {fileID: 1791768366284264414, guid: 0c16f7f1fdedd734781bbe2d85688cd7, type: 3}
   topDownGunParent: {fileID: 1791768364438770319}
   fpsGunParent: {fileID: 0}
   rope: {fileID: 0}
@@ -5220,7 +5220,7 @@ Transform:
   m_GameObject: {fileID: 1791768364388438436}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.22, z: 1}
+  m_LocalPosition: {x: 0.32, y: 0.62, z: 0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

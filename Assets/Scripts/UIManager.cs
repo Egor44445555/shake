@@ -23,13 +23,6 @@ public class UIManager : MonoBehaviour
 	[SerializeField]
 	private GameObject targetCountBlock;
 
-
-	[SerializeField] public Text XPCount;
-	[SerializeField] GameObject XPCountBlock;
-	[SerializeField] public Text levelCount;
-	[SerializeField] GameObject levelCountBlock;
-
-
 	public Color redColor;
 
 	public Color greenColor;
@@ -59,6 +52,16 @@ public class UIManager : MonoBehaviour
 	private bool overIsSuccess;
 
 	private bool over;
+
+
+	[Header("Arena Settings")]
+	[SerializeField] public Text XPCount;
+	[SerializeField] GameObject XPCountBlock;
+	[SerializeField] public Text levelCount;
+	[SerializeField] GameObject levelCountBlock;
+	[SerializeField] public GameObject totalCountBlock;
+	[SerializeField] public Text totalLevelCount;
+	[SerializeField] public Text totalXPCount;
 
 	private void Awake()
 	{

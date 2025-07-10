@@ -238,6 +238,11 @@ public class Combat : MonoBehaviour
 				{
 					GameManager.Instance.PostManager.StartHurt();
 					GameManager.Instance.LevelManager.Defeat(DefeatType.died);
+
+					if (isArena)
+					{ 
+						Spawner.main.OnPlayerDeath();
+					}
 				}
 				Die(_team);
 			}

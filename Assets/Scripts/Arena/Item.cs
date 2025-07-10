@@ -113,6 +113,7 @@ public class Item : MonoBehaviour
             {
                 case Types.Experience:
                     Spawner.main.currentEXP += amount;
+                    Spawner.main.accumulatedEXP += amount;
 
                     if (Spawner.main.currentEXP >= Spawner.main.maxEXP)
                     {

@@ -153,14 +153,14 @@ public class Breakable : MonoBehaviour
 	private void OnCollisionEnter(Collision collision)
 	{
 		if (((1 << collision.gameObject.layer) & (int)GameManager.Instance.LayerManager.HurtLayer) != 0)
-		{
-			Hurt(999999);
-			breakDelay = 0f;
-		}
-		else if (rb != null && yVelocityLastFrame <= 0f - Mathf.Abs(boomYVelocity))
-		{
-			Hurt(999999);
-			breakDelay = 0f;
-		}
+			{
+				Hurt(999999);
+				breakDelay = 0f;
+			}
+			else if (rb != null && yVelocityLastFrame <= 0f - Mathf.Abs(boomYVelocity))
+			{
+				Hurt(999999);
+				breakDelay = 0f;
+			}
 	}
 }

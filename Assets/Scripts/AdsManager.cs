@@ -1,5 +1,5 @@
 using UnityEngine;
-// using GamePush;
+using GamePush;
 
 public class AdsManager : MonoBehaviour
 {
@@ -13,34 +13,34 @@ public class AdsManager : MonoBehaviour
 
     async void Start()
     {
-        // await GP_Init.Ready;
+        await GP_Init.Ready;
 
-        // GP_Ads.OnRewardedStart += () => Debug.Log("Rewarded реклама началась");
-        // GP_Ads.OnFullscreenStart += () => Debug.Log("Реклама началась");
+        GP_Ads.OnRewardedStart += () => Debug.Log("Rewarded реклама началась");
+        GP_Ads.OnFullscreenStart += () => Debug.Log("Реклама началась");
 
-        // GP_Ads.OnRewardedClose += (success) => OnRewarded(success);
+        GP_Ads.OnRewardedClose += (success) => OnRewarded(success);
 
-        // GP_Ads.OnFullscreenClose += (success) =>
-        // {
-        //     if (success)
-        //     {
-        //         Debug.Log("Advertising completed");
-        //     }
-        //     else
-        //     {
-        //         Debug.Log("Advertising skipped");
-        //     }
-        // };
+        GP_Ads.OnFullscreenClose += (success) =>
+        {
+            if (success)
+            {
+                Debug.Log("Advertising completed");
+            }
+            else
+            {
+                Debug.Log("Advertising skipped");
+            }
+        };
 
         OnPluginReady();
     }
 
     void CheckReady()
     {
-        // if (GP_Init.isReady)
-        // {
-        //     OnPluginReady();
-        // }
+        if (GP_Init.isReady)
+        {
+            OnPluginReady();
+        }
     }
 
     void OnPluginReady()
@@ -50,12 +50,12 @@ public class AdsManager : MonoBehaviour
 
     public void ShowRewarded(string placement = "default")
     {
-        // GP_Ads.ShowRewarded(placement);
+        GP_Ads.ShowRewarded(placement);
     }
 
     public void ShowFullscreenAd()
     {
-        // GP_Ads.ShowFullscreen();
+        GP_Ads.ShowFullscreen();
     }
 
     void OnRewarded(bool success)

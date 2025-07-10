@@ -10,6 +10,7 @@ TagManager:
   - Popup
   - MoveJoystick
   - AimJoystick
+  - Box
   layers:
   - Default
   - TransparentFX

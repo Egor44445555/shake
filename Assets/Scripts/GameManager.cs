@@ -1,5 +1,5 @@
 using UnityEngine;
-// using GamePush;
+using GamePush;
 
 public class GameManager : MonoBehaviour
 {
@@ -80,10 +80,10 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		// if (GP_Device.IsMobile())
-		// {
-		// 	// isMobile = true;
-		// }
+		if (GP_Device.IsMobile())
+		{
+			isMobile = true;
+		}
 
 		if (!isMobile)
 		{
