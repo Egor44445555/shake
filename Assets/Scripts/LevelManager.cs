@@ -182,7 +182,14 @@ public class LevelManager : MonoBehaviour
 		{
 			if (UnityEngine.Input.GetKeyDown(KeyCode.R))
 			{
-				TryLoadLevel(levelIndex);
+				if (FindObjectOfType<Spawner>() == null)
+				{
+					TryLoadLevel(levelIndex);
+				}
+				else
+				{
+					TryLoadLevel(0);
+				}	
 			}
 		}
 		else if (gameState == gameStates.success)
@@ -222,7 +229,14 @@ public class LevelManager : MonoBehaviour
 
 	public void TryLoadLevelButton()
 	{
-		TryLoadLevel(levelIndex);
+		if (FindObjectOfType<Spawner>() == null)
+		{
+			TryLoadLevel(levelIndex);
+		}
+		else
+		{
+			TryLoadLevel(0);
+		}		
 	}
 
 	public void TryLoadNextLevelButton()
